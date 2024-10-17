@@ -181,12 +181,16 @@ var fetchCmd = &cobra.Command{
 					DeleteBranchOnMerge: repo.GetDeleteBranchOnMerge(),                                                                               // Topics associated with the repository
 					Private:             repo.GetPrivate(),                                                                                           // Privacy status of the repository
 					HasIssues:           repo.GetHasIssues(),                                                                                         // Whether the repository has issues
-					HasWiki:             repo.GetHasWiki(),                                                                                           // Whether the repository has a wiki
-					HasPages:            repo.GetHasPages(),                                                                                          // Whether the repository has pages
-					IsTemplate:          repo.GetIsTemplate(),                                                                                        // Whether the repository is a template
-					LicenseTemplate:     repo.GetLicenseTemplate(),                                                                                   // License template for the repository
-					GitignoreTemplate:   repo.GetGitignoreTemplate(),                                                                                 // Gitignore template for the repository
-					TeamId:              int64(repo.GetTeamID()),                                                                                     // Team ID associated with the repository
+					HasWiki:             repo.GetHasWiki(),
+					Organization: &v1.Organization{
+						Login: repo.GetOwner().GetLogin(),
+						Id:    int64(repo.GetOwner().GetID()),
+					}, // Whether the repository has a wiki
+					HasPages:          repo.GetHasPages(),          // Whether the repository has pages
+					IsTemplate:        repo.GetIsTemplate(),        // Whether the repository is a template
+					LicenseTemplate:   repo.GetLicenseTemplate(),   // License template for the repository
+					GitignoreTemplate: repo.GetGitignoreTemplate(), // Gitignore template for the repository
+					TeamId:            int64(repo.GetTeamID()),     // Team ID associated with the repository
 				}
 				producer.SendRepository("repository", data) // Send repository details to Kafka topic
 			}
