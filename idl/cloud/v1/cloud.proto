@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package cloud.v1;
+
+import "validate/validate.proto";
+
+// UserProfile represents a GitHub user's profile
+message Profile {
+    string login = 1;
+    int32 id = 2;
+    string avatar_url = 3;
+    string html_url = 4;
+    string type = 5;
+}
+
+// Repository represents a GitHub repository
+message Repository {
+    int32 id = 1;
+    string name = 2;
+    string full_name = 3;
+    bool private = 4;
+    int32 owner = 5;
+}
+
+// Commit represents a GitHub commit
+message Commit {
+    string sha = 1;
+    CommitDetails commit = 2;
+
+    message CommitDetails {
+        Author author = 1;
+        string message = 2;
+
+        message Author {
+            string name = 1;
+            string email = 2;
+            string date = 3;
+        }
+    }
+}
