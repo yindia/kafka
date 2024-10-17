@@ -1,40 +1,224 @@
 syntax = "proto3";
 
-package cloud.v1;
+package cloud.v2;
 
 import "validate/validate.proto";
 
-// UserProfile represents a GitHub user's profile
+
 message Profile {
-    string login = 1;
-    int32 id = 2;
-    string avatar_url = 3;
-    string html_url = 4;
-    string type = 5;
+   oneof profile {
+      User user = 1;
+      Organization organization = 2;
+   }
 }
-
-// Repository represents a GitHub repository
+// Repository represents a GitHub repository with various attributes.
 message Repository {
-    int32 id = 1;
-    string name = 2;
-    string full_name = 3;
-    bool private = 4;
-    int32 owner = 5;
+    // Unique identifier for the repository.
+    int64 id = 1;
+    // Unique node identifier for the repository.
+    string node_id = 2;
+    // Owner of the repository.
+    User owner = 3;
+    // Name of the repository.
+    string name = 4;
+    // Full name of the repository including the owner's name.
+    string full_name = 5;
+    // Brief description of the repository.
+    string description = 6;
+    // Homepage URL of the repository.
+    string homepage = 7;
+    // Default branch of the repository.
+    string default_branch = 9;
+    // Deprecated: Use default_branch instead.
+    string master_branch = 10; 
+    // Timestamps for various repository events.
+    Timestamp created_at = 11;
+    Timestamp pushed_at = 12;
+    Timestamp updated_at = 13;
+    // URLs for accessing the repository.
+    string html_url = 14;
+    string clone_url = 15;
+    string git_url = 16;
+    string mirror_url = 17;
+    string ssh_url = 18;
+    string svn_url = 19;
+    // Primary programming language of the repository.
+    string language = 20;
+    // Indicates if the repository is a fork.
+    bool fork = 21;
+    // Counts of various repository metrics.
+    int32 forks_count = 22;
+    int32 network_count = 23;
+    int32 open_issues_count = 24;
+    int32 open_issues = 25;
+    int32 stargazers_count = 26;
+    int32 subscribers_count = 27;
+    int32 watchers_count = 28;
+    int32 watchers = 29;
+    int32 size = 30;
+    // Repository initialization settings.
+    bool auto_init = 31;
+    // Parent, source, and template repositories.
+    Repository parent = 32;
+    Repository source = 33;
+    Repository template_repository = 34;
+    // Organization associated with the repository.
+    Organization organization = 35;
+    // Permissions for the repository.
+    map<string, bool> permissions = 36;
+    // Merge options for the repository.
+    bool allow_rebase_merge = 37;
+    bool allow_squash_merge = 38;
+    bool allow_merge_commit = 39;
+    bool allow_auto_merge = 40;
+    bool delete_branch_on_merge = 41;
+    // Topics associated with the repository.
+    repeated string topics = 42;
+    // Repository status flags.
+    bool archived = 43;
+    bool disabled = 44;
+    // Privacy settings for the repository.
+    bool private = 46;
+    // Feature flags for the repository.
+    bool has_issues = 47;
+    bool has_wiki = 48;
+    bool has_pages = 49;
+    bool has_projects = 50;
+    bool has_downloads = 51;
+    bool is_template = 52;
+    // Templates for license and gitignore.
+    string license_template = 53;
+    string gitignore_template = 54;
+    // Team ID associated with the repository.
+    int64 team_id = 55;
+    // URLs for accessing the repository.
+    string url = 56;
+    string archive_url = 57;
+    // Visibility status of the repository.
+    string visibility = 58;
 }
 
-// Commit represents a GitHub commit
-message Commit {
-    string sha = 1;
-    CommitDetails commit = 2;
+// User represents a GitHub user with various attributes.
+message User {
+    // Unique login name of the user.
+    string login = 1; // Must not be empty
+    // Unique identifier for the user.
+    int64 id = 2; // Must be greater than 0
+    // Unique node identifier for the user.
+    string node_id = 3; // Must not be empty
+    // URLs for the user's avatar and profile.
+    string avatar_url = 4; // Must be a valid URL
+    string html_url = 5; // Must be a valid URL
+    // Optional fields for user information.
+    string gravatar_id = 6; // No validation needed
+    string name = 7; // No validation needed
+    string company = 8; // No validation needed
+    string blog = 9; // Must be a valid URL
+    string location = 10; // No validation needed
+    string email = 11; // Must be a valid email
+    bool hireable = 12; // No validation needed
+    string bio = 13; // Max length of 160 characters
+    string twitter_username = 14; // No validation needed
+    // Counts of the user's repositories and followers.
+    int32 public_repos = 15; // Must be greater than or equal to 0
+    int32 public_gists = 16; // Must be greater than or equal to 0
+    int32 followers = 17; // Must be greater than or equal to 0
+    int32 following = 18; // Must be greater than or equal to 0
+    // Timestamps for user events.
+    Timestamp created_at = 19; // No validation needed
+    Timestamp updated_at = 20; // No validation needed
+    Timestamp suspended_at = 21; // No validation needed
+    string type = 22; // No validation needed
+    bool site_admin = 23; // No validation needed
+    // Counts of private repositories and gists.
+    int32 total_private_repos = 24; // Must be greater than or equal to 0
+    int32 owned_private_repos = 25; // Must be greater than or equal to 0
+    int32 private_gists = 26; // Must be greater than or equal to 0
+    int32 disk_usage = 27; // Must be greater than or equal to 0
+    int32 collaborators = 28; // Must be greater than or equal to 0
+    bool two_factor_authentication = 29; // No validation needed
+    // API URLs
+    string url = 32; // Must be a valid URL
+    string events_url = 33; // Must be a valid URL
+    string following_url = 34; // Must be a valid URL
+    string followers_url = 35; // Must be a valid URL
+    string gists_url = 36; // Must be a valid URL
+    string organizations_url = 37; // Must be a valid URL
+    string received_events_url = 38; // Must be a valid URL
+    string repos_url = 39; // Must be a valid URL
+    string starred_url = 40; // Must be a valid URL
+    string subscriptions_url = 41; // Must be a valid URL
 
-    message CommitDetails {
-        Author author = 1;
-        string message = 2;
 
-        message Author {
-            string name = 1;
-            string email = 2;
-            string date = 3;
-        }
-    }
+    // Permissions identifies the permissions that a user has on a given
+    // repository. This is only populated when calling Repositories.ListCollaborators.
+    map<string, bool> permissions = 43; // No validation needed
+}
+
+// Organization represents a GitHub organization.
+message Organization {
+    string login = 1; // Must not be empty
+    int64 id = 2; // Must be greater than 0
+    string node_id = 3; // Must not be empty
+    string avatar_url = 4; // Must be a valid URL
+    string html_url = 5; // Must be a valid URL
+    string name = 6; // No validation needed
+    string company = 7; // No validation needed
+    string blog = 8; // Must be a valid URL
+    string location = 9; // No validation needed
+    string email = 10; // Must be a valid email
+    string twitter_username = 11; // No validation needed
+    string description = 12; // No validation needed
+    int32 public_repos = 13; // Must be greater than or equal to 0
+    int32 public_gists = 14; // Must be greater than or equal to 0
+    int32 followers = 15; // Must be greater than or equal to 0
+    int32 following = 16; // Must be greater than or equal to 0
+    Timestamp created_at = 17; // No validation needed
+    Timestamp updated_at = 18; // No validation needed
+    int32 total_private_repos = 19; // Must be greater than or equal to 0
+    int32 owned_private_repos = 20; // Must be greater than or equal to 0
+    int32 private_gists = 21; // Must be greater than or equal to 0
+    int32 disk_usage = 22; // Must be greater than or equal to 0
+    int32 collaborators = 23; // Must be greater than or equal to 0
+    string billing_email = 24; // Must be a valid email
+    string type = 25; // No validation needed
+    bool two_factor_requirement_enabled = 27; // No validation needed
+    bool is_verified = 28; // No validation needed
+    bool has_organization_projects = 29; // No validation needed
+    bool has_repository_projects = 30; // No validation needed
+
+    // DefaultRepoPermission can be one of: "read", "write", "admin", or "none".
+    string default_repository_permission = 31;
+    string default_repository_settings = 32;
+
+    // MembersCanCreateRepos default value is true.
+    bool members_can_create_repositories = 33; // No validation needed
+
+    // MembersCanCreatePublicRepos, MembersCanCreatePrivateRepos, MembersCanCreateInternalRepos
+    bool members_can_create_public_repositories = 34; // No validation needed
+    bool members_can_create_private_repositories = 35; // No validation needed
+    bool members_can_create_internal_repositories = 36; // No validation needed
+
+    // Deprecated: Use MembersCanCreatePublicRepos, MembersCanCreatePrivateRepos, MembersCanCreateInternalRepos instead.
+    string members_allowed_repository_creation_type = 37; // No validation needed
+
+    // MembersCanCreatePages toggles whether organization members can create GitHub Pages sites.
+    bool members_can_create_pages = 38; // No validation needed
+    bool members_can_create_public_pages = 39; // No validation needed
+    bool members_can_create_private_pages = 40; // No validation needed
+
+    // API URLs
+    string url = 41; // Must be a valid URL
+    string events_url = 42; // Must be a valid URL
+    string hooks_url = 43; // Must be a valid URL
+    string issues_url = 44; // Must be a valid URL
+    string members_url = 45; // Must be a valid URL
+    string public_members_url = 46; // Must be a valid URL
+    string repos_url = 47; // Must be a valid URL
+}
+
+// Ensure Timestamp is defined correctly
+message Timestamp {
+    int64 seconds = 1; // Seconds since epoch
+    int32 nanos = 2;   // Nanoseconds offset
 }
